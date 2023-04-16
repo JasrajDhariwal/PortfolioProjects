@@ -222,6 +222,16 @@ FROM PerthHousePrices
 GROUP BY SUBURB
 ORDER BY SUBURB ASC
 
+SELECT SUBURB, PRICE As MinHousePrice, DATE_SOLD, LONGITUDE, LATITUDE -- Using a sub query to retreive the property sold for the lowest price in the dataset
+FROM PerthHousePrices
+WHERE PRICE = (SELECT MIN(PRICE) FROM PerthHousePrices)
+
+SELECT SUBURB, PRICE As MaxHousePrice, DATE_SOLD, LONGITUDE, LATITUDE -- Using a sub query to retreive the property sold for the highest price in the dataset
+FROM PerthHousePrices
+WHERE PRICE = (SELECT MAX(PRICE) FROM PerthHousePrices)
+
+
+
 -- Creating Views for Tableau Visualisatons
 
 -- View 1
@@ -254,20 +264,41 @@ FROM PerthHousePrices
 GROUP BY SUBURB
 ORDER BY HousesSold DESC
 
--- View 4
+-- View 4 
+-- Avgerage price of houses in specific decades
 
-SELECT AVG(PRICE) As FirstDecade
+CREATE VIEW FirstDecadeAvgPrice AS
+SELECT AVG(PRICE) As FirstDecadeAvgPrice
 FROM PerthHousePrices
 WHERE YEAR(DATE_SOLD) >= 1988 AND YEAR(DATE_SOLD) <= 1998
 
-SELECT AVG(PRICE) As SecondDecade
+CREATE VIEW SecondDecadeAvgPrice AS
+SELECT AVG(PRICE) As SecondDecadeAvgPrice
 FROM PerthHousePrices
 WHERE YEAR(DATE_SOLD) >= 1998 AND YEAR(DATE_SOLD) <= 2008
 
-SELECT AVG(PRICE)
+CREATE VIEW ThirdDecadeAvgPrice AS
+SELECT AVG(PRICE) As ThirdDecadeAvgPrice
 FROM PerthHousePrices
 WHERE YEAR(DATE_SOLD) >= 2008 AND YEAR(DATE_SOLD) <= 2018
 
-SELECT AVG(PRICE)
+CREATE VIEW FinalYearsAvgPrice AS
+SELECT AVG(PRICE) FinalYearsAvgPrice
 FROM PerthHousePrices
 WHERE YEAR(DATE_SOLD) >= 2018 AND YEAR(DATE_SOLD) <= 2020
+
+-- View 5
+-- Using a sub query to retreive the property sold for the lowest price in the dataset
+
+CREATE VIEW LowestSoldHousePrice AS
+SELECT SUBURB, PRICE As MinHousePrice, DATE_SOLD, LONGITUDE, LATITUDE -- Using a sub query to retreive the property sold for the lowest price in the dataset
+FROM PerthHousePrices
+WHERE PRICE = (SELECT MIN(PRICE) FROM PerthHousePrices)
+
+-- View 6
+-- Using a sub query to retreive the property sold for the highest price in the dataset
+
+CREATE VIEW HighestSoldHousePrice AS
+SELECT SUBURB, PRICE As MaxHousePrice, DATE_SOLD, LONGITUDE, LATITUDE
+FROM PerthHousePrices
+WHERE PRICE = (SELECT MAX(PRICE) FROM PerthHousePrices)
